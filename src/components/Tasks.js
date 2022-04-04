@@ -1,4 +1,3 @@
-import React from 'react'
 import Task from './TaskItem'
 //import { useState } from 'react'
 
@@ -17,7 +16,7 @@ import Task from './TaskItem'
 // Recogemos las tasks y las funciones de App.js y lanzamos la lista con un formato. Necesitaremos .map para montar la lista
 // Este formato vendrá por parte de otro componente donde tendremos formato que usa cada item del array.
 // Por ello uno a uno le vamos pasando a TaskItem.js la propia task y la función onDelete
-const Tasks = ({ tasks, onDelete, onToggle }) => {
+const Tasks = ({ tasks, onDelete, onToggle}) => {
   return (
     <div>
         {tasks.map((task) => (

@@ -6,6 +6,10 @@ import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
 import About from "./components/About";
+import NotFound from "./components/NotFound";
+import TaskView from "./components/TaskView";
+import swal from 'sweetalert';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   // showAddTask -> Será un boolean para saber si el componente de AddTask se tiene que ver o no
@@ -35,6 +39,7 @@ const App = () => {
     //     reminder: false
     // }
   ]);
+  const base = "/taskTracker";
 
   // Función useEffect para sacar las tasks
   useEffect(() => {
@@ -80,9 +85,25 @@ const App = () => {
   // Usamos fetch para buscar la task de la API que queremos borrar y method para poner que queremos hacer
   const deleteTask = async (id) => {
     await fetch(`http://localhost:3001/tasks/${id}`, {
-      method: 'DELETE',
+      method: 'DELETE'
     })
-    setTasks(tasks.filter((task) => task.id !== id))
+    
+    
+    swal({
+      title: "Are you sure?",
+      text: "Task will be deleted",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        swal("Poof! Task has been deleted successfully", {
+          icon: "success",
+        })
+        setTasks(tasks.filter((task) => task.id !== id));
+      }
+    });
   }
 
   // TOGGLE REMINDER
@@ -97,7 +118,8 @@ const App = () => {
     const uptask = {...taskToToggle, 
     reminder: !taskToToggle.reminder}
 
-    // Usamos fetch para buscar la task de la API que queremos borrar y method para poner que queremos hacer
+    console.log(uptask)
+    // Usamos fetch para buscar la task de la API que queremos buscar y method para poner que queremos hacer
     const res = await fetch(`http://localhost:3001/tasks/${id}`, {
       method: 'PUT',
       headers: {
@@ -107,11 +129,12 @@ const App = () => {
       body: JSON.stringify(uptask),
     })
 
-    const data = await res.json()
+    // const data = await res.json()
 
     setTasks(tasks.map((task) => 
-    task.id === id ? { ...task, reminder: !data.reminder} : task))
-    console.log(tasks);
+    // task.id === id ? { ...task} : task))
+    task.id === id ? task = uptask : task))
+    // console.log(data);
   }
 
   // ADD TASK
@@ -138,6 +161,8 @@ const App = () => {
     const data = await res.json()
 
     setTasks([...tasks, data])
+    setShowAddTask(false)
+    console.log(tasks)
   }
 
   // PODEMOS HACERLO CON function
@@ -147,7 +172,11 @@ const App = () => {
   // le podemos dejar algún mensaje.
   // Como el botón de Add está en Header, es en este donde tenemos que pasar la función
   return (
-    <Router>
+    <Router basename={base} forceRefresh={true} getUserConfirmation={
+      (message, callback) => {
+        callback(window.confirm())
+      }
+    } >
       <div className="container">
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
@@ -158,31 +187,19 @@ const App = () => {
           <Route path="/"
           element={
             <>
-              {showAddTask ? <AddTask onAdd={addTask} /> : null}
+              {showAddTask ? <AddTask onAdd={addTask}/> : null}
               {tasks.length > 0 ? (<Tasks tasks={tasks} onDelete={deleteTask} 
               onToggle={toggleReminder} onAdd={addTask}/>) : ('No Tasks To Show')}
             </>
           } exact />
           <Route path="/about" element={<About/>} />
+          <Route path="*" element={<NotFound/>} />
+          <Route path="/task/:id" element={<TaskView/>} />
         </Routes>
         <Footer />
       </div>
     </Router>
   );
-
-  // LLamo a Tasks. Pero no tiene AddTask entonces no me muestra el form de este.
-  // Necesito pasar la variable showAddTask para saber si esta a true o a false
-
-  // ERROR RUTAS:
-  // La función no es válida en un React child. Esto ocurre si tu devuelves un
-  // componente insertado de Component por render. O al querer llamar a esta función
-  // en el render tengo:
-  //  - el componente AddTask que le paso la función de add
-  //  - el componente Tasks que le paso la función lista de tasks y las funciones
-  // Necesito un element, "una página/componente como el About.js" element={<X/>}
-  // Necesito pasar esta linea {showAddTask ? <AddTask onAdd={addTask} /> : null}
-  // Tengo que pasar la función addTask a el componente AddTask, no se si crear directamente
-  // la función en el componente
 
   // O PODEMOS HACERLO CON class
   // class App extends Component{
@@ -191,5 +208,71 @@ const App = () => {
   //   }
   // }
 }
+
+// FALTA:
+// - Formulario:
+//  + Agregar datetimepicker y tipo "Date", usando la biblioteca Moment HECHO
+//  + Quitar el alert de faltan datos y que me salga lo que falta debajo de su input HECHO
+// lo he hecho con el "parámetro" de required que me saca una "pequeña alerta" de campo vacío
+//  + Arreglar etiquetas de los inputs HECHO
+//  + Cuando le de a save se cierre y no le tenga que dar a Close HECHO
+// - Arreglar lo del reminder, "que no le tenga que dar 4 veces" HECHO
+// - Cuando le de al icono de borrar me saque un "modal" SweetAlert para que el usuario tenga
+// que aceptar la eliminación. HECHO
+// - Por último "cambiar lo de CSS" por Bootstrap. Implementar Bootstrap IMPLEMENTADO EN FORM
+
+// Comentario para cerrar el form con el boton Save:
+// Le seteo el valor de la boolean dentro de la función addTask, y como esta se la paso
+// al componente AddTask.js y al header le pasan ya la bool actualizada.
+
+// APUNTE CAMBIO DE REMINDER:
+// Tenia un error con lo del cambiar el valor del reminder. Porque yo primero buscaba la task seleccionada.
+// Entraba en esta, y modificaba el valor del reminder al contrario luego hacia un put de la modificada y
+// hacía un set de las tasks, cogía la tarea y volvía a modificar el reminder. Ahora si la id es igual a 
+// la id recogida hace un ternario de que si la tarea es igual a la tarea modificada la guarda en la lista y 
+// si no deja la task con dicha id como estaba.
+
+// REACT ROUTER COURSE:
+// + BrowserRouter: Engloba todas las rutas.
+
+// + <Route path='' component={} />: le decímos la ruta y el componente. Para asignar esa ruta a su componente
+
+// + exact: Por defecto los componentes se van "poniendo" uno encima de otro. Cuando cambie de ruta me sacará
+// el componente que ya teníamos más el de la nueva ruta.
+
+// + <Switch>: ¿? "Me daba error y yo uso <Routes>"
+
+// + <Link to="">: Crea un link que llebará a la page de la ruta pasada. Para cambiar de ruta.
+
+// + basename: Esto lo usamos dentro de BrowserRouter para poner una base en la ruta.
+//  ej -> localhost:3000/"base"/about
+
+// + forceRefresh: Esto lo usamos dentro de BrowserRouter para dar el efecto de refresco cuando cambiamos de ruta.
+//   NO FUNCIONA
+
+// + getUserConfirmation: esto lo usamos dentro de BrowserRouter para poder pedir una confirmación mediante un "modal".
+// este va a tener dentro una función con mensaje y callback, que mostrará una ventana de confirmación.
+// ej -> getUserConfirmation={(message, callback) => { callback(window.confirm()) } }
+//   NO FUNCIONA
+
+// + Por defecto cuando cambiamos de ruta nos lleva arriba de la página
+
+// + Vamos a hacer la page/component del Error 404 Not Found. Para ello creamos un nuevo componente y en
+// <Route path{"*"} element={}> usamos el * para decir lo que sea.
+
+// Access URL Params. Pasar a la ruta una id. Por ejemplo que cuando le de a click en un item me muestre solo la task con ese id
+// Si lo quiero implementar en lo que tengo, necesito en TaskItem hacer como con el doubleClick. Una función que
+// recoja un id y muestre la task con esa id. Ya tengo la función fetchTask, que busca una task por id.
+// Necesitamos si o si otra page con la tarea
+// Lo de sacar un parametro de la url no va bien, con el match y params.id. Hay que usar UseParams
+
+// con draggable a true y onDragStart podemos sacar un evento arrastrando el item. "En vez de Onclick".
+
+// + useParams: Obtiene el parametro después de : para luego utilizarlo en la page.
+
+// + useLocation: Obtiene la ruta de donde estas. Y con este podemos obtener los parámetros que van después de &
+// utilizamos lo puesto en el component "TaskView"
+
+// Me he quedado minuto 25:00 en el video de React Router Crash Course. 10mins de video
 
 export default App;

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 
 // props ahora es el título 
 // Podemos pasarle parametros desde aquí al button y hasta funciones "onClick"
-const Header = ({ title, onAdd, showAdd }) => {
+const Header = ({title , onAdd, showAdd }) => {
   // Esto nos permite ver la ruta en la que estamos actualmente
   const location = useLocation()
   return (
