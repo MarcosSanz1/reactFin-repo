@@ -39,7 +39,11 @@ const App = () => {
     //     reminder: false
     // }
   ]);
+
   const base = "/taskTracker";
+
+  // De forma predeterminada, el inicio de sesión tendrá un valor a falso. Ya que todavía no hemos iniciado sesión 
+  const [login, setLogin] = useState(false);
 
   // Función useEffect para sacar las tasks
   useEffect(() => {
@@ -181,6 +185,7 @@ const App = () => {
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
         showAdd={showAddTask}/>
+        <button onClick={() => setLogin(!login)}>{login ? "log out" : "login"}</button>
         {/* Queremos que cuando se muestre la lista de tasks solo se muestre este,
         no se muestre el About, para ello usamos dos rutas y exact */}
         <Routes>
@@ -271,9 +276,13 @@ const App = () => {
 // + useParams: Obtiene el parametro después de : para luego utilizarlo en la page.
 
 // + useLocation: Obtiene la ruta de donde estas. Y con este podemos obtener los parámetros que van después de &
-// utilizamos lo puesto en el component "TaskView"
+// con URLSearchParams(useLocation().search), y con .get sobre este y ("first" o "last") podemos sacar el primer o último parámetro detras de &.
 
-// Me he quedado minuto 25:00 en el video de React Router Crash Course. 10mins de video
+// + Vamos a crear un nuevo estado para hacer un login. Este en un inicio estará a false ya que no hemos iniciado sesión.
+// Ahora crearemos un boton para el login que al clicar seteará el valor al contrario que estaba, para luego cambiar el contenido con un ternario
+
+// VOY POR: Tengo que crear un nuevo componente Profile.js, crear una ruta y un link para cambiar de page (como el About) y luego volver al video minuto 26:00
+// Me falta esto, el useHistory y el NestedRouting. Lo tengo que terminar en 1 hora
 
 // Primero add .
 // Segundo commit

@@ -3,14 +3,8 @@
     {
       "text": "fagfj",
       "date": "2022-04-05T22:00:00.000Z",
-      "reminder": false,
-      "id": 4
-    },
-    {
-      "text": "Nueva",
-      "day": "Mon Apr 04 2022 10:46:24 GMT+0200 (hora de verano de Europa central)",
       "reminder": true,
-      "id": 5
+      "id": 4
     }
   ]
 }
