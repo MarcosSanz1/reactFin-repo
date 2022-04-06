@@ -11,18 +11,16 @@ const TaskView = () => {
 
   const { task, error, loading } = useFetch(
     "http://localhost:3001/tasks/" + params.id
-
-    
   );
 
-    // useEffect(() => {
-    //   const getTask = async () => {
-    //     const tasksFromServer = await fetchTask()
-    //     setTask(tasksFromServer)
-    //   }
+    useEffect(() => {
+      const getTask = async () => {
+        //const tasksFromServer = await fetchTask()
+        //setTask(tasksFromServer)
+      }
   
-    //   getTask();
-    // },[])
+      getTask();
+    },[])
 
     console.log(task.reminder)
     console.log(error)

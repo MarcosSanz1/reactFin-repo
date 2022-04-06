@@ -323,4 +323,12 @@ const App = () => {
 
 // ¿Que tengo que poner en la ruta ?
 
+// A la vista le paso un parametro
+// Ese parametro tengo que recogerlo en el TaskView
+// Una vez lo recoja uso un useEffect pasandole la id
+// Con esto ya puedo recoger los parametros que quiera
+// Estando ya en la TaskView, desde ahí ya seteamos la task.
+
+// Tengo que tener las cosas claras y subdividir lo que quiero hacer en "primero paso esto - segundo recojo lo otro"
+
 export default App;
