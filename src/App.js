@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import React from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
@@ -50,7 +50,9 @@ const App = () => {
   const [login, setLogin] = useState(false);
 
   // ESTO LO PASO A 
-  const [task, setTask] = useState({});
+  const [idTask, setIdTask] = useState();
+
+  // const navigate = useNavigate();
 
   // Función useEffect para sacar las tasks
   useEffect(() => {
@@ -76,16 +78,16 @@ const App = () => {
 
   // FETCH TASK
   // Guardará el contenido de una task que buscará por su id.
-  // DONDE LANZO ESTO???? - No me hace nada porque no se ejecuta
   const fetchTask = async (id) => {
     const res = await fetch(`http://localhost:3001/tasks/${id}`)
     const data = await res.json()
 
-    console.log(data);
-    // navigate("/task/:id", {replace: true})
-    setTask(data);
-    console.log(task);
-    return data
+    // El sacar la task funciona falla el cambiar de ruta
+    // Luego tengo que pasar el resultado a TaskView
+    console.log(data.id);
+    setIdTask(data.id)
+    //navigate('/task/$:id', {replace: true})
+    return data.id
   }
 
   // DELETE TASK
@@ -220,14 +222,14 @@ const App = () => {
             <>
               {showAddTask ? <AddTask onAdd={addTask}/> : null}
               {tasks.length > 0 ? (<Tasks tasks={tasks} onDelete={deleteTask} 
-              onAdd={addTask}/>) : ('No Tasks To Show')}
+              onAdd={addTask} onViewTask={fetchTask}/>) : ('No Tasks To Show')}
             </>
           } />
           <Route path="/about" element={<About/>} />
           <Route path="/profile" element={<Profile login={login}/>} />
           <Route path="*" element={<NotFound/>}/>
           {/* Creo que necesito pase a TaskView lo que sacaba de data (era un objeto task)*/}
-          <Route path="/task/:id" element={<TaskView />} />
+          <Route path="/task/:id" element={<TaskView idTask={idTask}/>} />
         </Routes>
         <Footer />
       </div>

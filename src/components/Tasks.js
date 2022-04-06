@@ -20,27 +20,27 @@ const navigate = useNavigate
 // Este formato vendrá por parte de otro componente donde tendremos formato que usa cada item del array.
 // Por ello uno a uno le vamos pasando a TaskItem.js la propia task y la función onDelete
 
-// FETCH TASK
-  // Guardará el contenido de una task que buscará por su id.
-  const fetchTask = async (id) => {
-    const res = await fetch(`http://localhost:3001/tasks/${id}`)
-    const data = await res.json()
+// // FETCH TASK
+//   // Guardará el contenido de una task que buscará por su id.
+//   const fetchTask = async (id) => {
+//     const res = await fetch(`http://localhost:3001/tasks/${id}`)
+//     const data = await res.json()
 
-    // El sacar la task funciona falla el cambiar de ruta
-    // Luego tengo que pasar el resultado a TaskView
-    console.log(data.id);
-    navigate("/task/:id", {replace: true})
-    return data.id
-  }
+//     // El sacar la task funciona falla el cambiar de ruta
+//     // Luego tengo que pasar el resultado a TaskView
+//     console.log(data.id);
+//     navigate(`/task/${data.id}`, {replace: true})
+//     return data.id
+//   }
 
-const Tasks = ({ tasks, onDelete}) => {
+const Tasks = ({ tasks, onDelete, onViewTask}) => {
   return (
     <div>
         {tasks.map((task) => (
         <Task 
          key={task.id}
          task={task} 
-         onDelete={onDelete} onView={fetchTask}/>
+         onDelete={onDelete} onViewTask={onViewTask}/>
         ))}
     </div>
   )
