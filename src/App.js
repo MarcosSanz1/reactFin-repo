@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
@@ -8,10 +8,14 @@ import Footer from "./components/Footer";
 import About from "./components/About";
 import NotFound from "./components/NotFound";
 import TaskView from "./components/TaskView";
+import Profile from "./components/Profile";
+//import LoginButton from "./components/LoginButton";
 import swal from 'sweetalert';
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 const App = () => {
+
   // showAddTask -> Será un boolean para saber si el componente de AddTask se tiene que ver o no
   // "por defecto lo ponemos a false, porque queremos que lo muestre cuando cliquemos en el btn Add"
   // setShowAddTask -> Vamos a utilizar esta, solo para poder mostrar y ocultar, ya que está va a ser
@@ -45,6 +49,9 @@ const App = () => {
   // De forma predeterminada, el inicio de sesión tendrá un valor a falso. Ya que todavía no hemos iniciado sesión 
   const [login, setLogin] = useState(false);
 
+  // ESTO LO PASO A 
+  const [task, setTask] = useState({});
+
   // Función useEffect para sacar las tasks
   useEffect(() => {
     const getTasks = async () => {
@@ -69,11 +76,15 @@ const App = () => {
 
   // FETCH TASK
   // Guardará el contenido de una task que buscará por su id.
+  // DONDE LANZO ESTO???? - No me hace nada porque no se ejecuta
   const fetchTask = async (id) => {
     const res = await fetch(`http://localhost:3001/tasks/${id}`)
     const data = await res.json()
 
     console.log(data);
+    // navigate("/task/:id", {replace: true})
+    setTask(data);
+    console.log(task);
     return data
   }
 
@@ -88,11 +99,7 @@ const App = () => {
 
   // Usamos fetch para buscar la task de la API que queremos borrar y method para poner que queremos hacer
   const deleteTask = async (id) => {
-    await fetch(`http://localhost:3001/tasks/${id}`, {
-      method: 'DELETE'
-    })
-    
-    
+
     swal({
       title: "Are you sure?",
       text: "Task will be deleted",
@@ -101,13 +108,19 @@ const App = () => {
       dangerMode: true,
     })
     .then((willDelete) => {
+      console.log(willDelete);
       if (willDelete) {
+        console.log("Entro")
         swal("Poof! Task has been deleted successfully", {
           icon: "success",
         })
         setTasks(tasks.filter((task) => task.id !== id));
+        fetch(`http://localhost:3001/tasks/${id}`, {
+        method: 'DELETE'
+    })
       }
     });
+    console.log(tasks)
   }
 
   // TOGGLE REMINDER
@@ -117,29 +130,30 @@ const App = () => {
   // si la id de la task es = a la que le recogemos, entonces vamos a tener un objeto específico con 
   // la task que ya teníamos y cambiando el valor de reminder, que será lo opuesto de lo que tenía,
   // si tenía el valor a true ahora será false y viceversa. De lo contrario, va a devolver la task que ya teníamos
-  const toggleReminder = async (id) => {
-    const taskToToggle = await fetchTask(id)
-    const uptask = {...taskToToggle, 
-    reminder: !taskToToggle.reminder}
 
-    console.log(uptask)
-    // Usamos fetch para buscar la task de la API que queremos buscar y method para poner que queremos hacer
-    const res = await fetch(`http://localhost:3001/tasks/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      // Guardamos en string el reminder de la task pasada por id
-      body: JSON.stringify(uptask),
-    })
+  // const toggleReminder = async (id) => {
+  //   const taskToToggle = await fetchTask(id)
+  //   const updateTask = {...taskToToggle, 
+  //   reminder: !taskToToggle.reminder}
 
-    // const data = await res.json()
+  //   console.log(updateTask)
+  //   // Usamos fetch para buscar la task de la API que queremos buscar y method para poner que queremos hacer
+  //   const res = await fetch(`http://localhost:3001/tasks/${id}`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-type': 'application/json'
+  //     },
+  //     // Guardamos en string el reminder de la task pasada por id
+  //     body: JSON.stringify(updateTask),
+  //   })
 
-    setTasks(tasks.map((task) => 
-    // task.id === id ? { ...task} : task))
-    task.id === id ? task = uptask : task))
-    // console.log(data);
-  }
+  //   // const data = await res.json()
+
+  //   setTasks(tasks.map((task) => 
+  //   // task.id === id ? { ...task} : task))
+  //   task.id === id ? task = updateTask : task))
+  //   // console.log(data);
+  // }
 
   // ADD TASK
   // const addTask = (task) => {
@@ -169,6 +183,18 @@ const App = () => {
     console.log(tasks)
   }
 
+  // const userLogin = () => {
+  //   const navigate = useNavigate();
+
+  //   // Al usar este Hook, le estamos indicando a React que el componente tiene que hacer algo después de renderizarse
+  //   // En useEffect
+  //   // [] solo se ejecutará la primera vez que entra, ["var"] se ejecutará con cada cambio de estado de esa variable
+  //   // y sin nada cada segundo o con cada tick.
+  //   if (!login) {
+  //     navigate("/", {replace: true})
+  //   }    
+  // }
+
   // PODEMOS HACERLO CON function
   // Le pasamos al componente Tasks (la lista de tasks y funciones CRUD). También
   // podemos poner algún condicional antes de pasar las tasks a Tasks.js. Aquí por ejemplo
@@ -185,21 +211,23 @@ const App = () => {
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
         showAdd={showAddTask}/>
-        <button onClick={() => setLogin(!login)}>{login ? "log out" : "login"}</button>
-        {/* Queremos que cuando se muestre la lista de tasks solo se muestre este,
-        no se muestre el About, para ello usamos dos rutas y exact */}
+        <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button>
+        {/* <LoginButton color={ login ? 'red' : 'white'} 
+        text={login ? 'Log out' : 'Login'} /> */}
         <Routes>
           <Route path="/"
           element={
             <>
               {showAddTask ? <AddTask onAdd={addTask}/> : null}
               {tasks.length > 0 ? (<Tasks tasks={tasks} onDelete={deleteTask} 
-              onToggle={toggleReminder} onAdd={addTask}/>) : ('No Tasks To Show')}
+              onAdd={addTask}/>) : ('No Tasks To Show')}
             </>
-          } exact />
+          } />
           <Route path="/about" element={<About/>} />
-          <Route path="*" element={<NotFound/>} />
-          <Route path="/task/:id" element={<TaskView/>} />
+          <Route path="/profile" element={<Profile login={login}/>} />
+          <Route path="*" element={<NotFound/>}/>
+          {/* Creo que necesito pase a TaskView lo que sacaba de data (era un objeto task)*/}
+          <Route path="/task/:id" element={<TaskView />} />
         </Routes>
         <Footer />
       </div>
@@ -213,18 +241,7 @@ const App = () => {
   //   }
   // }
 }
-
-// FALTA:
-// - Formulario:
-//  + Agregar datetimepicker y tipo "Date", usando la biblioteca Moment HECHO
-//  + Quitar el alert de faltan datos y que me salga lo que falta debajo de su input HECHO
-// lo he hecho con el "parámetro" de required que me saca una "pequeña alerta" de campo vacío
-//  + Arreglar etiquetas de los inputs HECHO
-//  + Cuando le de a save se cierre y no le tenga que dar a Close HECHO
-// - Arreglar lo del reminder, "que no le tenga que dar 4 veces" HECHO
-// - Cuando le de al icono de borrar me saque un "modal" SweetAlert para que el usuario tenga
-// que aceptar la eliminación. HECHO
-// - Por último "cambiar lo de CSS" por Bootstrap. Implementar Bootstrap IMPLEMENTADO EN FORM
+// Logica de validación porque me coge espacios en blanco
 
 // Comentario para cerrar el form con el boton Save:
 // Le seteo el valor de la boolean dentro de la función addTask, y como esta se la paso
@@ -279,7 +296,13 @@ const App = () => {
 // con URLSearchParams(useLocation().search), y con .get sobre este y ("first" o "last") podemos sacar el primer o último parámetro detras de &.
 
 // + Vamos a crear un nuevo estado para hacer un login. Este en un inicio estará a false ya que no hemos iniciado sesión.
-// Ahora crearemos un boton para el login que al clicar seteará el valor al contrario que estaba, para luego cambiar el contenido con un ternario
+// Ahora crearemos un boton para el login que al clicar seteará el valor al contrario que estaba, para luego cambiar el contenido con un ternario.
+// No funciona muy bien y el Redirect ya no existe.
+
+// + useHistory: Va mal no funciona
+
+// Redirect y useHistory lo hemos remplazado por useNavigation.
+// + useNavigate: Sirve para navegar hacia la ruta que le digas.
 
 // VOY POR: Tengo que crear un nuevo componente Profile.js, crear una ruta y un link para cambiar de page (como el About) y luego volver al video minuto 26:00
 // Me falta esto, el useHistory y el NestedRouting. Lo tengo que terminar en 1 hora
@@ -287,5 +310,17 @@ const App = () => {
 // Primero add .
 // Segundo commit
 // Tercero push
+
+// Para recoger los cambios del repositorio (git pull)
+
+// Puedo hacer dos funciones:
+// - Función en Tasks o TaskItem que tiene que tener el onDobleClick() para cambiar de ruta a la de "task/:id"
+// - Función que recoja/mande una task por id para luego en TaskView mostrar los parámetros de la task
+
+// Tengo que recoger el id de la devolución que hago en Tasks linea 31
+// Pasarle esa id a la página vista de la task
+// Y hacer un use effect en TaskView como hacía con la lista de tareas en App
+
+// ¿Que tengo que poner en la ruta ?
 
 export default App;

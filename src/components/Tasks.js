@@ -1,5 +1,8 @@
+import { useNavigate } from 'react-router-dom'
 import Task from './TaskItem'
 //import { useState } from 'react'
+
+const navigate = useNavigate
 
 // TASKS IN STATE
 // Queremos que la lista de tareas sea parte de nuestro state, para ello llamamos al hook useState
@@ -16,14 +19,28 @@ import Task from './TaskItem'
 // Recogemos las tasks y las funciones de App.js y lanzamos la lista con un formato. Necesitaremos .map para montar la lista
 // Este formato vendrá por parte de otro componente donde tendremos formato que usa cada item del array.
 // Por ello uno a uno le vamos pasando a TaskItem.js la propia task y la función onDelete
-const Tasks = ({ tasks, onDelete, onToggle}) => {
+
+// FETCH TASK
+  // Guardará el contenido de una task que buscará por su id.
+  const fetchTask = async (id) => {
+    const res = await fetch(`http://localhost:3001/tasks/${id}`)
+    const data = await res.json()
+
+    // El sacar la task funciona falla el cambiar de ruta
+    // Luego tengo que pasar el resultado a TaskView
+    console.log(data.id);
+    navigate("/task/:id", {replace: true})
+    return data.id
+  }
+
+const Tasks = ({ tasks, onDelete}) => {
   return (
     <div>
         {tasks.map((task) => (
         <Task 
          key={task.id}
          task={task} 
-         onDelete={onDelete} onToggle={onToggle}/>
+         onDelete={onDelete} onView={fetchTask}/>
         ))}
     </div>
   )

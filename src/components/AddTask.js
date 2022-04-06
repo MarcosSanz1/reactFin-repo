@@ -1,14 +1,14 @@
 import React from 'react'
 import { useState } from 'react'
 import DateTimePicker from 'react-datetime-picker'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 
 const AddTask = ({ onAdd }) => {
     // Hemos importado el useState para guardar en el state de la lista de tasks, las nuevas tasks.
-    const [text, setText] = useState('')
-    const [reminder, setReminder] = useState(false)
+    const [name, setName] = useState('')
+    const [reminder, setReminder] = useState(false);
     const [day, setDay] = useState(new Date());
+    const [description, setDescription] = useState('');
 
     // Antes de añadir una nueva task vamos a querer revisarlas para asegurarmos de que se crea correctamente.
     const onSubmit = (e) => {
@@ -19,30 +19,44 @@ const AddTask = ({ onAdd }) => {
         //     return
         // }
         
+        console.log(description);
+
         // Si no, si está todo correctamente añadirá la task con los datos recogidos
-        onAdd({ text, day, reminder})
+        onAdd({ name, day, reminder, description})
         // Por último volverá a poner los valores iniciales (vacios).
-        setText('')
+        setName('')
         setDay(null)
         setReminder(false)
+        setDescription('')
     }
       
     // Vamos a crear el formulario con los inputs y funciones necesarias
   return (
     <Form onSubmit={onSubmit}>
-        <Form.Group className="mb-3" controlId="formName">
-            <Form.Label>Task</Form.Label>
-            <Form.Control type="text" required placeholder="Add Task" 
-            value={text} onChange={(e) => setText(e.target.value)}/>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formDate">
-            <Form.Label>Add Date</Form.Label>
-            <DateTimePicker required class="form-control" id="dateTime" onChange={setDay} value={day} />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formCheckbox">
-            <Form.Check type="checkbox" label="Reminder" id="cbReminder" checked={reminder} value={reminder}
-            onChange={(e) => setReminder(e.currentTarget.checked)} />
-        </Form.Group>
+        <Row>
+            <Form.Group className="mb-3" controlId="formName">
+                <Form.Label>Task</Form.Label>
+                <Form.Control type="text" required placeholder="Add Task" 
+                value={name} onChange={(e) => setName(e.target.value)}/>
+            </Form.Group>
+            <Col>
+                <Form.Group as={Col} className="mb-3" controlId="formDate">
+                    <Form.Label>Add Date</Form.Label>
+                    <DateTimePicker required class="form-control" id="dateTime" onChange={setDay} value={day} />
+                </Form.Group>
+            </Col>
+            <Col>
+                <Form.Group as={Col} className="mb-3" controlId="formCheckbox">
+                    <Form.Check type="checkbox" label="Reminder" id="cbReminder" checked={reminder} value={reminder}
+                    onChange={(e) => setReminder(e.currentTarget.checked)} />
+                </Form.Group>
+            </Col>
+            <Form.Group className="mb-3" >
+                <Form.Label>Description</Form.Label>
+                <Form.Control as="textarea" rows={3} id="txtaDescription" 
+                onChange={(e) => setDescription(e.target.value)} value={description} />
+            </Form.Group>
+        </Row>
         <Button variant="dark" type="submit">Save Task</Button>
     </Form>
     // SIN BOOTSTRAP

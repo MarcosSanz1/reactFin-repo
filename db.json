@@ -1,10 +1,25 @@
 {
   "tasks": [
     {
-      "text": "fagfj",
-      "date": "2022-04-05T22:00:00.000Z",
+      "name": "Nueva",
+      "day": "2022-04-05T12:01:18.727Z",
       "reminder": true,
-      "id": 4
+      "description": "Descripción de ejemplo",
+      "id": 1
+    },
+    {
+      "name": "Nueva2",
+      "day": "2022-04-20T13:20:00.000Z",
+      "reminder": true,
+      "description": "Descripción de ejemplo2",
+      "id": 2
+    },
+    {
+      "name": " Nueva3",
+      "day": "2022-04-06T08:04:06.494Z",
+      "reminder": true,
+      "description": "Ejemplo de descripción para la tarea número 3",
+      "id": 3
     }
   ]
 }
