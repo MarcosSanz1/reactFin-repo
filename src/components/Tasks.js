@@ -33,14 +33,14 @@ const navigate = useNavigate
 //     return data.id
 //   }
 
-const Tasks = ({ tasks, onDelete, onViewTask}) => {
+const Tasks = ({ tasks, onDelete, onViewTask, sendIdTask }) => {
   return (
     <div>
         {tasks.map((task) => (
         <Task 
          key={task.id}
          task={task} 
-         onDelete={onDelete} onViewTask={onViewTask}/>
+         onDelete={onDelete} onViewTask={onViewTask} sendIdTask={ (value) => sendIdTask(value)}/>
         ))}
     </div>
   )

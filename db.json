@@ -1,17 +1,17 @@
 {
   "tasks": [
     {
-      "name": "Nueva",
-      "day": "2022-04-05T12:01:18.727Z",
       "reminder": true,
-      "description": "Descripción de ejemplo",
+      "name": "Cambio",
+      "day": "2022-04-07T12:39:40.260Z",
+      "description": "descripción de prueba",
       "id": 1
     },
     {
-      "name": "Nueva2",
-      "day": "2022-04-20T13:20:00.000Z",
+      "name": "Cambio",
+      "day": "2022-04-07T12:52:54.803Z",
       "reminder": true,
-      "description": "Descripción de ejemplo2",
+      "description": "descripción de prueba",
       "id": 2
     },
     {
@@ -21,5 +21,10 @@
       "description": "Ejemplo de descripción para la tarea número 3",
       "id": 3
     }
-  ]
+  ],
+  "users": {
+    "name": "Usuario1",
+    "password": "123456",
+    "id": 1
+  }
 }

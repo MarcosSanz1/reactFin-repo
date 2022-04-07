@@ -49,10 +49,12 @@ const App = () => {
   // De forma predeterminada, el inicio de sesión tendrá un valor a falso. Ya que todavía no hemos iniciado sesión 
   const [login, setLogin] = useState(false);
 
-  // ESTO LO PASO A 
+  // ESTO LO PASO A LA VISTA DE LA TASK
   const [idTask, setIdTask] = useState();
 
   // const navigate = useNavigate();
+
+  const [taskId, setTaskId] = useState();
 
   // Función useEffect para sacar las tasks
   useEffect(() => {
@@ -60,7 +62,7 @@ const App = () => {
       const tasksFromServer = await fetchTasks()
       setTasks(tasksFromServer)
     }
-
+    
     getTasks();
   },[])
 
@@ -133,29 +135,64 @@ const App = () => {
   // la task que ya teníamos y cambiando el valor de reminder, que será lo opuesto de lo que tenía,
   // si tenía el valor a true ahora será false y viceversa. De lo contrario, va a devolver la task que ya teníamos
 
-  // const toggleReminder = async (id) => {
-  //   const taskToToggle = await fetchTask(id)
-  //   const updateTask = {...taskToToggle, 
-  //   reminder: !taskToToggle.reminder}
+  const editTask = async (id) => {
+    const taskToToggle = await fetchTask(id)
 
-  //   console.log(updateTask)
-  //   // Usamos fetch para buscar la task de la API que queremos buscar y method para poner que queremos hacer
-  //   const res = await fetch(`http://localhost:3001/tasks/${id}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-type': 'application/json'
-  //     },
-  //     // Guardamos en string el reminder de la task pasada por id
-  //     body: JSON.stringify(updateTask),
-  //   })
+    // En updateTask tenemos la task "base" y con , le pasamos el parámetro que modifica
+    // Aquí tengo que poner todos los parámetros de la task, con los cambios ya puestos.
+    // Primero conseguir cargar la task en el formulario de AddTask.
+    // Los cambios los hago en
+    const updateTask = {...taskToToggle, 
+      name: 'Cambio',
+      day: new Date(),
+      reminder: !taskToToggle.reminder,
+      description: 'descripción de prueba'
+    }
 
-  //   // const data = await res.json()
+    console.log(updateTask)
 
-  //   setTasks(tasks.map((task) => 
-  //   // task.id === id ? { ...task} : task))
-  //   task.id === id ? task = updateTask : task))
-  //   // console.log(data);
-  // }
+    const res = await fetch(`http://localhost:3001/tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      // Guardamos en string el reminder de la task pasada por id
+      body: JSON.stringify(updateTask),
+    })
+
+    // const data = await res.json()
+
+    setTasks(tasks.map((task) => 
+    // task.id === id ? { ...task} : task))
+    task.id === id ? task = updateTask : task))
+
+    setShowAddTask(true)
+    console.log(tasks)
+  }
+
+  const toggleReminder = async (id) => {
+    const taskToToggle = await fetchTask(id)
+    const updateTask = {...taskToToggle, 
+    reminder: !taskToToggle.reminder}
+
+    console.log(updateTask)
+    // Usamos fetch para buscar la task de la API que queremos buscar y method para poner que queremos hacer
+    const res = await fetch(`http://localhost:3001/tasks/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      // Guardamos en string el reminder de la task pasada por id
+      body: JSON.stringify(updateTask),
+    })
+
+    // const data = await res.json()
+
+    setTasks(tasks.map((task) => 
+    // task.id === id ? { ...task} : task))
+    task.id === id ? task = updateTask : task))
+    // console.log(data);
+  }
 
   // ADD TASK
   // const addTask = (task) => {
@@ -197,6 +234,18 @@ const App = () => {
   //   }    
   // }
 
+  const sendIdTask = (taskId) => {
+    setTaskId({taskId});
+    console.log(taskId);
+
+    // navigate(`/task/${taskId}`);
+
+    return taskId
+  }
+
+  console.log("Id bueno ",taskId);
+  console.log(idTask);
+
   // PODEMOS HACERLO CON function
   // Le pasamos al componente Tasks (la lista de tasks y funciones CRUD). También
   // podemos poner algún condicional antes de pasar las tasks a Tasks.js. Aquí por ejemplo
@@ -213,6 +262,7 @@ const App = () => {
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
         showAdd={showAddTask}/>
+        {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y a esta se le pasará la variable login */}
         <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button>
         {/* <LoginButton color={ login ? 'red' : 'white'} 
         text={login ? 'Log out' : 'Login'} /> */}
@@ -222,19 +272,29 @@ const App = () => {
             <>
               {showAddTask ? <AddTask onAdd={addTask}/> : null}
               {tasks.length > 0 ? (<Tasks tasks={tasks} onDelete={deleteTask} 
-              onAdd={addTask} onViewTask={fetchTask}/>) : ('No Tasks To Show')}
+              onAdd={addTask} onViewTask={fetchTask} sendIdTask={sendIdTask}/>) : ('No Tasks To Show')}
             </>
           } />
           <Route path="/about" element={<About/>} />
           <Route path="/profile" element={<Profile login={login}/>} />
           <Route path="*" element={<NotFound/>}/>
           {/* Creo que necesito pase a TaskView lo que sacaba de data (era un objeto task)*/}
-          <Route path="/task/:id" element={<TaskView idTask={idTask}/>} />
+          <Route path="/task/:id" element={
+            <>
+              {showAddTask ? <AddTask onAdd={addTask} /> : null}
+              <TaskView idTask={taskId} onEdit={editTask} onDelete={deleteTask} 
+              showAdd={showAddTask}/>
+            </>
+          } />
         </Routes>
         <Footer />
       </div>
     </Router>
   );
+
+  // Para abrir el formulario, usabamos una variable boolean.
+  // Necesito hacer lo mismo. También tengo que cambiar el nombre que tiene el boton.
+  // ? Edit Task : Close
 
   // O PODEMOS HACERLO CON class
   // class App extends Component{
@@ -331,6 +391,10 @@ const App = () => {
 // Con esto ya puedo recoger los parametros que quiera
 // Estando ya en la TaskView, desde ahí ya seteamos la task.
 
+// Tengo que conseguir cambiar la ruta con los dos clicks
+
 // Tengo que tener las cosas claras y subdividir lo que quiero hacer en "primero paso esto - segundo recojo lo otro"
+
+// Necesito implementar el login con un usuario y contraseña. Si ese usuario y contraseña no coincide no se puede loguear
 
 export default App;
