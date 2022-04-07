@@ -97,7 +97,8 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
 }
 
 // APUNTES PARA HACER EL EDITAR MAÑANA:
-// Crear boton Nuevo de Editar cuando accedes a la vista de la tarea. Con ese ya puedo cerrar y abrir
+// Crear boton Nuevo de Editar cuando accedes a la vista de la tarea. Con ese ya puedo cerrar y abrir ARREGLAR EN HEADER EL PATHNAME
+
 // Un único botón que al cerrar el formulario, guarde los datos modificados.
 // Con el nuevo botón no necesito un ternario. Simplemente le pongo al nuevo la función de editar.
 // Cuando vaya a la vista de la tarea, por defecto este cerrado el formulario.

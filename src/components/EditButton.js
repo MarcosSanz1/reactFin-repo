@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 // Podemos recoger valores y funciones y ponerselos al button
-const Button = ({color, text, onClick}) => {
+const EditButton = ({color, text, onClick}) => {
 
   return <button 
   onClick={onClick} 
@@ -10,14 +10,14 @@ const Button = ({color, text, onClick}) => {
   className='btn'>{text}</button>
 }
 
-Button.defaulProps = {
+EditButton.defaulProps = {
     color: 'steelblue'
 }
 
-Button.propTypes = {
+EditButton.propTypes = {
     text: PropTypes.string,
     color: PropTypes.string,
     onClick: PropTypes.func
 }
 
-export default Button
+export default EditButton

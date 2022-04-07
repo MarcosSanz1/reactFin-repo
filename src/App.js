@@ -261,7 +261,7 @@ const App = () => {
       <div className="container">
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask}/>
+        showAdd={showAddTask} onEdit={() => setShowAddTask(!showAddTask)}/>
         {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y a esta se le pasará la variable login */}
         <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button>
         {/* <LoginButton color={ login ? 'red' : 'white'} 
@@ -281,7 +281,7 @@ const App = () => {
           {/* Creo que necesito pase a TaskView lo que sacaba de data (era un objeto task)*/}
           <Route path="/task/:id" element={
             <>
-              {showAddTask ? <AddTask onAdd={addTask} /> : null}
+              {showAddTask ? <AddTask onAdd={addTask} onEdit={editTask} sendIdTask={sendIdTask} /> : null}
               <TaskView idTask={taskId} onEdit={editTask} onDelete={deleteTask} 
               showAdd={showAddTask}/>
             </>

@@ -1,25 +1,11 @@
 {
   "tasks": [
     {
-      "reminder": true,
       "name": "Cambio",
-      "day": "2022-04-07T12:39:40.260Z",
+      "day": "2022-04-07T18:01:57.139Z",
+      "reminder": true,
       "description": "descripción de prueba",
       "id": 1
-    },
-    {
-      "name": "Cambio",
-      "day": "2022-04-07T12:52:54.803Z",
-      "reminder": true,
-      "description": "descripción de prueba",
-      "id": 2
-    },
-    {
-      "name": " Nueva3",
-      "day": "2022-04-06T08:04:06.494Z",
-      "reminder": true,
-      "description": "Ejemplo de descripción para la tarea número 3",
-      "id": 3
     }
   ],
   "users": {

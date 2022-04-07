@@ -3,7 +3,7 @@ import { useState } from 'react'
 import DateTimePicker from 'react-datetime-picker'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 
-const AddTask = ({ onAdd }) => {
+const AddTask = ({ onAdd, onEdit, idTask }) => {
     // Hemos importado el useState para guardar en el state de la lista de tasks, las nuevas tasks.
     const [name, setName] = useState('')
     const [reminder, setReminder] = useState(false);
@@ -22,6 +22,7 @@ const AddTask = ({ onAdd }) => {
         console.log(description);
 
         // Si no, si está todo correctamente añadirá la task con los datos recogidos
+        //onEdit({ name, day, reminder, description})
         onAdd({ name, day, reminder, description})
         // Por último volverá a poner los valores iniciales (vacios).
         setName('')
