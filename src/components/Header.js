@@ -21,7 +21,7 @@ const Header = ({title , onAdd, showAdd, onEdit }) => {
           onClick={onAdd} 
         />
       )}
-      {location.pathname === "/task/1" && (
+      {location.pathname.indexOf('task') !== -1 && (
         <EditButton 
           color={showAdd ? 'red' : 'green'} 
           text={showAdd ? 'Close' : 'Edit'} 

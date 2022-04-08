@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useFetch } from '../hooks/useFetch';
 import { FaTimes } from 'react-icons/fa'
 import moment from 'moment'
+import AddTask from './AddTask';
 
 // El task esta vacio no me setea el task con el data de la función fetchTask
 
@@ -41,12 +42,12 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
     // },[])
 
     useEffect(() => {
-      const getTasks = async () => {
+      const getTask = async () => {
         const tasksFromServer = await fetchTask()
         setTask(tasksFromServer)
       }
   
-      getTasks();
+      getTask();
     },[])
 
     // FETCH TASK
@@ -98,6 +99,10 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
 
 // APUNTES PARA HACER EL EDITAR MAÑANA:
 // Crear boton Nuevo de Editar cuando accedes a la vista de la tarea. Con ese ya puedo cerrar y abrir ARREGLAR EN HEADER EL PATHNAME
+
+// El objeto task lo tengo en Tasks y en TaskView.
+// La id de la task la tengo guardada en App con taskId
+// Tengo que pasar la task a el componente del formulario
 
 // Un único botón que al cerrar el formulario, guarde los datos modificados.
 // Con el nuevo botón no necesito un ternario. Simplemente le pongo al nuevo la función de editar.

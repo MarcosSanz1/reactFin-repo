@@ -1,16 +1,60 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DateTimePicker from 'react-datetime-picker'
 import { Form, Button, Row, Col } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
 
-const AddTask = ({ onAdd, onEdit, idTask }) => {
+const AddTask = ({ onAdd, onEdit, nueva }) => {
     // Hemos importado el useState para guardar en el state de la lista de tasks, las nuevas tasks.
-    const [name, setName] = useState('')
+
+    // seteaba pero no mostraba el valor seteado
+    const [idTask, setIdTask] = useState('');
+    const [name, setName] = useState('');
     const [reminder, setReminder] = useState(false);
     const [day, setDay] = useState(new Date());
     const [description, setDescription] = useState('');
 
+    const [loadTask, setLoadTask] = useState(
+        // Esto tiene que iniciarse con la task que saco del fetchTask
+        // Puedo hacer set dos veces la primera para cargar y la segunda para cambiar
+        {
+          name: '',
+          day: '',
+          reminder: false,
+          description: ''
+        },
+      )
+
+    const params = useParams();
+
+    useEffect(() => {
+        const getTask = async () => {
+          const tasksFromServer = await fetchTask()
+          setLoadTask(tasksFromServer)
+        }
+    
+        getTask();
+      },[])
+
+      console.log("id por ruta ", params.id)
+
+    const fetchTask = async () => {
+        const res = await fetch(`http://localhost:3001/tasks/${params.id}`)
+        const data = await res.json()
+    
+        // El sacar la task funciona falla el cambiar de ruta
+        // Luego tengo que pasar el resultado a TaskView
+        setIdTask(data.id);
+        setName(data.name);
+        setDay(new Date(data.day));
+        setReminder(data.reminder);
+        setDescription(data.description);
+    
+        return data
+      }
+
     // Antes de añadir una nueva task vamos a querer revisarlas para asegurarmos de que se crea correctamente.
+    // Tengo que hacer que dependiendo de la ruta me haga un onAdd o un onEdit. Puedo recoger una bool
     const onSubmit = (e) => {
         e.preventDefault()
         // Si el texto del nombre de la task esta vacio sacará un alert por pantalla
@@ -18,27 +62,33 @@ const AddTask = ({ onAdd, onEdit, idTask }) => {
         //     alert('Please add a task')
         //     return
         // }
-        
-        console.log(description);
 
-        // Si no, si está todo correctamente añadirá la task con los datos recogidos
-        //onEdit({ name, day, reminder, description})
-        onAdd({ name, day, reminder, description})
-        // Por último volverá a poner los valores iniciales (vacios).
-        setName('')
-        setDay(null)
-        setReminder(false)
-        setDescription('')
+        // Tengo que pasar una variable boolean a false en TaskView y a true en Tasks
+        // Aquí puedo usar un if, para que si está en la ruta x lance un onAdd o un onEdit
+        if (nueva) {
+            onAdd({ name, day, reminder, description })
+            // Por último volverá a poner los valores iniciales (vacios).
+            setName('')
+            setDay('')
+            setReminder(false)
+            setDescription('')
+        }
+        else{
+            onEdit({ idTask, name, day, reminder, description })
+        }
     }
-      
+
+    console.log("Tipo datos dia ", day);
+
     // Vamos a crear el formulario con los inputs y funciones necesarias
+    // Necesito poder cambiar el valor.
   return (
     <Form onSubmit={onSubmit}>
         <Row>
             <Form.Group className="mb-3" controlId="formName">
                 <Form.Label>Task</Form.Label>
                 <Form.Control type="text" required placeholder="Add Task" 
-                value={name} onChange={(e) => setName(e.target.value)}/>
+                value={name} onChange={(e) => setName(e.currentTarget.value)}/>
             </Form.Group>
             <Col>
                 <Form.Group as={Col} className="mb-3" controlId="formDate">
@@ -55,7 +105,7 @@ const AddTask = ({ onAdd, onEdit, idTask }) => {
             <Form.Group className="mb-3" >
                 <Form.Label>Description</Form.Label>
                 <Form.Control as="textarea" rows={3} id="txtaDescription" 
-                onChange={(e) => setDescription(e.target.value)} value={description} />
+                onChange={(e) => setDescription(e.currentTarget.value)} value={description} />
             </Form.Group>
         </Row>
         <Button variant="dark" type="submit">Save Task</Button>

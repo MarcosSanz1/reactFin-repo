@@ -50,11 +50,13 @@ const App = () => {
   const [login, setLogin] = useState(false);
 
   // ESTO LO PASO A LA VISTA DE LA TASK
-  const [idTask, setIdTask] = useState();
+  const [idTask, setIdTask] = useState(null);
 
   // const navigate = useNavigate();
 
-  const [taskId, setTaskId] = useState();
+  const [taskId, setTaskId] = useState(null);
+
+  const nueva = true;
 
   // Función useEffect para sacar las tasks
   useEffect(() => {
@@ -135,7 +137,7 @@ const App = () => {
   // la task que ya teníamos y cambiando el valor de reminder, que será lo opuesto de lo que tenía,
   // si tenía el valor a true ahora será false y viceversa. De lo contrario, va a devolver la task que ya teníamos
 
-  const editTask = async (id) => {
+  const editTasks = async (id) => {
     const taskToToggle = await fetchTask(id)
 
     // En updateTask tenemos la task "base" y con , le pasamos el parámetro que modifica
@@ -165,6 +167,48 @@ const App = () => {
     setTasks(tasks.map((task) => 
     // task.id === id ? { ...task} : task))
     task.id === id ? task = updateTask : task))
+
+    setShowAddTask(true)
+    console.log(tasks)
+  }
+
+  console.log(taskId);
+
+  const editTask = async (task) => {
+
+    // PASOS PARA EDITAR:
+    // 1- recoger la tarea que con los cambios
+    // 2- sacar la lista
+    // 3- cambiar la tarea con el mismo id, por la tarea modificada
+    // 4- guardar esa nueva lista
+
+    console.log("Id de la task",task.id)
+    // 1- RECOGER LA TAREA
+    const taskToToggle = await fetchTask(task.id)
+
+    // En updateTask tenemos la task "base" y con , le pasamos el parámetro que modifica
+    // Aquí tengo que poner todos los parámetros de la task, con los cambios ya puestos.
+    // Primero conseguir cargar la task en el formulario de AddTask.
+    // Los cambios los hago en
+    const updateTask = {...taskToToggle, task}
+
+    console.log(task)
+    console.log(updateTask.id)
+
+    const res = await fetch(`http://localhost:3001/tasks/${task.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      // Guardamos en string el reminder de la task pasada por id
+      body: JSON.stringify(updateTask),
+    })
+
+    // const data = await res.json()
+
+    setTasks(tasks.map((task) => 
+    // task.id === id ? { ...task} : task))
+    task !== updateTask ? task = updateTask : task))
 
     setShowAddTask(true)
     console.log(tasks)
@@ -270,7 +314,7 @@ const App = () => {
           <Route path="/"
           element={
             <>
-              {showAddTask ? <AddTask onAdd={addTask}/> : null}
+              {showAddTask ? <AddTask onAdd={addTask} nueva={nueva} /> : null}
               {tasks.length > 0 ? (<Tasks tasks={tasks} onDelete={deleteTask} 
               onAdd={addTask} onViewTask={fetchTask} sendIdTask={sendIdTask}/>) : ('No Tasks To Show')}
             </>
@@ -278,10 +322,10 @@ const App = () => {
           <Route path="/about" element={<About/>} />
           <Route path="/profile" element={<Profile login={login}/>} />
           <Route path="*" element={<NotFound/>}/>
-          {/* Creo que necesito pase a TaskView lo que sacaba de data (era un objeto task)*/}
+          {/* Creo que desde aquí necesito pasar a AddTask la task (tengo la id, que me traigo de darle dos clicks en una tarea)*/}
           <Route path="/task/:id" element={
             <>
-              {showAddTask ? <AddTask onAdd={addTask} onEdit={editTask} sendIdTask={sendIdTask} /> : null}
+              {showAddTask ? <AddTask onEdit={editTask} nueva={!nueva} /> : null}
               <TaskView idTask={taskId} onEdit={editTask} onDelete={deleteTask} 
               showAdd={showAddTask}/>
             </>
@@ -291,6 +335,8 @@ const App = () => {
       </div>
     </Router>
   );
+
+// Pasar una boolean y segun lo que sea poner un valor u otro en los inputs
 
   // Para abrir el formulario, usabamos una variable boolean.
   // Necesito hacer lo mismo. También tengo que cambiar el nombre que tiene el boton.
