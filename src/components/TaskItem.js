@@ -21,13 +21,14 @@ const history = createBrowserHistory();
 const TaskItem = ({ task, onDelete, onViewTask, sendIdTask}) => {
 
   const navigate = useNavigate();
+  console.log("Task que llega a TaskItem ",task)
   return (
     // Si el reminder de la task esta en true, devolverá la clase reminder. Si no, no tendrá nada.
     // El valor del reminder esta llegando del state de las tareas que tenemos. Entonces lo revisa todo el tiempo.
     // El onView si que lo hace porque me saca por consola la task seleccionada
     <div draggable="true" className={`task ${task.reminder ? 'reminder' : ''}`} onDoubleClick={() => navigate(`/task/${task.id}`)}>
         <h3>
-            {task.name}{' '}
+            {task.name}
             <FaTimes style={{ color: 'red', cursor: 'pointer' }}
              onClick={() => onDelete(task.id)}/>
         </h3>

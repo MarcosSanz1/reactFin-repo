@@ -1,0 +1,9 @@
+.containerPrincipal {
+    border: 1px solid blue;
+    padding: 40px;
+    background-color: white;
+}
+
+.containerSecundario{
+    text-align: center;
+}

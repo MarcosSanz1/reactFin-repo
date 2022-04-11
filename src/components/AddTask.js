@@ -8,32 +8,28 @@ const AddTask = ({ onAdd, onEdit, nueva }) => {
     // Hemos importado el useState para guardar en el state de la lista de tasks, las nuevas tasks.
 
     // seteaba pero no mostraba el valor seteado
-    const [idTask, setIdTask] = useState('');
+    const [id, setId] = useState(null);
     const [name, setName] = useState('');
     const [reminder, setReminder] = useState(false);
     const [day, setDay] = useState(new Date());
     const [description, setDescription] = useState('');
 
-    const [loadTask, setLoadTask] = useState(
-        // Esto tiene que iniciarse con la task que saco del fetchTask
-        // Puedo hacer set dos veces la primera para cargar y la segunda para cambiar
-        {
-          name: '',
-          day: '',
-          reminder: false,
-          description: ''
-        },
-      )
+    // const [loadTask, setLoadTask] = useState({})
+
+    // Necesito pasar un objeto con los datos de cada parámetro a la función de editTask()
+    // La función para editar ->
+    // 1- Recoge una task
+    // 2- 
 
     const params = useParams();
 
+    // Esto lo tengo que poner en la condición de que sea una tarea editable
     useEffect(() => {
-        const getTask = async () => {
-          const tasksFromServer = await fetchTask()
-          setLoadTask(tasksFromServer)
-        }
-    
-        getTask();
+      // No quiero que nada más entrar me lance esto porque entro para añadir y para editar
+      // Entonces si nada más entrar le digo que busque por parametro y no tiene parametro peta
+      if (!nueva) {
+        fetchTask()
+      }
       },[])
 
       console.log("id por ruta ", params.id)
@@ -41,15 +37,18 @@ const AddTask = ({ onAdd, onEdit, nueva }) => {
     const fetchTask = async () => {
         const res = await fetch(`http://localhost:3001/tasks/${params.id}`)
         const data = await res.json()
+        console.log("data que llega a AddTask",data);
     
         // El sacar la task funciona falla el cambiar de ruta
         // Luego tengo que pasar el resultado a TaskView
-        setIdTask(data.id);
+        setId(data.id);
         setName(data.name);
         setDay(new Date(data.day));
         setReminder(data.reminder);
         setDescription(data.description);
-    
+
+        console.log("Dia sacado de la data ",data.day)
+
         return data
       }
 
@@ -67,18 +66,15 @@ const AddTask = ({ onAdd, onEdit, nueva }) => {
         // Aquí puedo usar un if, para que si está en la ruta x lance un onAdd o un onEdit
         if (nueva) {
             onAdd({ name, day, reminder, description })
-            // Por último volverá a poner los valores iniciales (vacios).
-            setName('')
-            setDay('')
-            setReminder(false)
-            setDescription('')
         }
         else{
-            onEdit({ idTask, name, day, reminder, description })
+          // El onEdit necesita la tarea(para ver cambios) y su id(para buscar y comparar)
+            onEdit({ id, name, day, reminder, description })
         }
     }
 
     console.log("Tipo datos dia ", day);
+    console.log("Nombre de la task ", name);
 
     // Vamos a crear el formulario con los inputs y funciones necesarias
     // Necesito poder cambiar el valor.

@@ -1,19 +1,25 @@
 {
   "tasks": [
     {
-      "task": {
-        "id": 1,
-        "name": "Cambio",
-        "day": "2022-04-07T18:01:57.139Z",
-        "reminder": true,
-        "description": "descripción de prueba"
-      },
-      "id": 1
+      "id": 1,
+      "name": "Cambio3",
+      "day": "2022-04-07T18:01:57.139Z",
+      "reminder": true,
+      "description": "Descripción de ejemplo para la primera tarea. Cambio realizado"
+    },
+    {
+      "id": 2,
+      "name": "Nueva2",
+      "day": "2022-04-14T10:32:25.412Z",
+      "reminder": true,
+      "description": "Descripción para a última prueba"
     }
   ],
-  "users": {
-    "name": "Usuario1",
-    "password": "123456",
-    "id": 1
-  }
+  "users": [
+    {
+      "name": "Usuario1",
+      "password": "123456",
+      "id": 1
+    }
+  ]
 }

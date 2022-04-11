@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 //import LoginButton from "./components/LoginButton";
 import swal from 'sweetalert';
 import "bootstrap/dist/css/bootstrap.min.css";
+import Login from "./components/Login";
 
 
 const App = () => {
@@ -60,12 +61,7 @@ const App = () => {
 
   // Función useEffect para sacar las tasks
   useEffect(() => {
-    const getTasks = async () => {
-      const tasksFromServer = await fetchTasks()
-      setTasks(tasksFromServer)
-    }
-    
-    getTasks();
+    fetchTasks()
   },[])
 
   // Fetch Tasks = Busca tasks "recoge el contenido de la API"
@@ -77,6 +73,8 @@ const App = () => {
     const data = await res.json()
 
     console.log(data);
+    setTasks(data)
+
     return data
   }
 
@@ -91,7 +89,6 @@ const App = () => {
     console.log(data.id);
     setIdTask(data.id)
     //navigate('/task/$:id', {replace: true})
-    return data.id
   }
 
   // DELETE TASK
@@ -137,70 +134,19 @@ const App = () => {
   // la task que ya teníamos y cambiando el valor de reminder, que será lo opuesto de lo que tenía,
   // si tenía el valor a true ahora será false y viceversa. De lo contrario, va a devolver la task que ya teníamos
 
-  const editTasks = async (id) => {
-    const taskToToggle = await fetchTask(id)
-
-    // En updateTask tenemos la task "base" y con , le pasamos el parámetro que modifica
-    // Aquí tengo que poner todos los parámetros de la task, con los cambios ya puestos.
-    // Primero conseguir cargar la task en el formulario de AddTask.
-    // Los cambios los hago en
-    const updateTask = {...taskToToggle, 
-      name: 'Cambio',
-      day: new Date(),
-      reminder: !taskToToggle.reminder,
-      description: 'descripción de prueba'
-    }
-
-    console.log(updateTask)
-
-    const res = await fetch(`http://localhost:3001/tasks/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      // Guardamos en string el reminder de la task pasada por id
-      body: JSON.stringify(updateTask),
-    })
-
-    // const data = await res.json()
-
-    setTasks(tasks.map((task) => 
-    // task.id === id ? { ...task} : task))
-    task.id === id ? task = updateTask : task))
-
-    setShowAddTask(true)
-    console.log(tasks)
-  }
-
   console.log(taskId);
 
-  const editTask = async (task) => {
+  const editTask = async (updateTask) => {
 
-    // PASOS PARA EDITAR:
-    // 1- recoger la tarea que con los cambios
-    // 2- sacar la lista
-    // 3- cambiar la tarea con el mismo id, por la tarea modificada
-    // 4- guardar esa nueva lista
+    console.log("id de la Task en función EDITAR ",updateTask.id)
+    console.log("Task actualizada ", updateTask)
 
-    console.log("Id de la task",task.id)
-    // 1- RECOGER LA TAREA
-    const taskToToggle = await fetchTask(task.id)
-
-    // En updateTask tenemos la task "base" y con , le pasamos el parámetro que modifica
-    // Aquí tengo que poner todos los parámetros de la task, con los cambios ya puestos.
-    // Primero conseguir cargar la task en el formulario de AddTask.
-    // Los cambios los hago en
-    const updateTask = {...taskToToggle, task}
-
-    console.log(task)
-    console.log(updateTask.id)
-
-    const res = await fetch(`http://localhost:3001/tasks/${task.id}`, {
+    const res = await fetch(`http://localhost:3001/tasks/${updateTask.id}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json'
       },
-      // Guardamos en string el reminder de la task pasada por id
+      // Guardamos la tarea actualizada
       body: JSON.stringify(updateTask),
     })
 
@@ -210,32 +156,8 @@ const App = () => {
     // task.id === id ? { ...task} : task))
     task !== updateTask ? task = updateTask : task))
 
-    setShowAddTask(true)
+    setShowAddTask(false)
     console.log(tasks)
-  }
-
-  const toggleReminder = async (id) => {
-    const taskToToggle = await fetchTask(id)
-    const updateTask = {...taskToToggle, 
-    reminder: !taskToToggle.reminder}
-
-    console.log(updateTask)
-    // Usamos fetch para buscar la task de la API que queremos buscar y method para poner que queremos hacer
-    const res = await fetch(`http://localhost:3001/tasks/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      // Guardamos en string el reminder de la task pasada por id
-      body: JSON.stringify(updateTask),
-    })
-
-    // const data = await res.json()
-
-    setTasks(tasks.map((task) => 
-    // task.id === id ? { ...task} : task))
-    task.id === id ? task = updateTask : task))
-    // console.log(data);
   }
 
   // ADD TASK
@@ -289,6 +211,7 @@ const App = () => {
 
   console.log("Id bueno ",taskId);
   console.log(idTask);
+  console.log("Lista de tareas que le paso a Tasks ",tasks);
 
   // PODEMOS HACERLO CON function
   // Le pasamos al componente Tasks (la lista de tasks y funciones CRUD). También
@@ -306,7 +229,9 @@ const App = () => {
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
         showAdd={showAddTask} onEdit={() => setShowAddTask(!showAddTask)}/>
-        {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y a esta se le pasará la variable login */}
+        {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y esta sacará la boolean de si ha conseguido iniciar o no
+        el botón de Login no se mostrará en la página de login y cuando entre y cambie de página aparecerá el botón con el texto Log out, que a darle cuando está en Log out cerrará sesión 
+        y vuelta a empezar*/}
         <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button>
         {/* <LoginButton color={ login ? 'red' : 'white'} 
         text={login ? 'Log out' : 'Login'} /> */}
@@ -320,6 +245,7 @@ const App = () => {
             </>
           } />
           <Route path="/about" element={<About/>} />
+          <Route path="/login" element={<Login/>} />
           <Route path="/profile" element={<Profile login={login}/>} />
           <Route path="*" element={<NotFound/>}/>
           {/* Creo que desde aquí necesito pasar a AddTask la task (tengo la id, que me traigo de darle dos clicks en una tarea)*/}

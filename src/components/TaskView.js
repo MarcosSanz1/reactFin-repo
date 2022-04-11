@@ -16,17 +16,11 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
   // const [task, setTask] = useState(null);
 
   console.log("id TaskView "+taskId);
-  const [task, setTask] = useState(
-    {
-      id: null,
-      name: '',
-      day: '',
-      reminder: false,
-      description: ''
-    },
-  )
+  const [task, setTask] = useState({});
 
   const params = useParams();
+
+  console.log("Params ruta ",params.id)
 
   // const { task, error, loading } = useFetch(
   //   "http://localhost:3001/tasks/" + idTask
@@ -42,12 +36,7 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
     // },[])
 
     useEffect(() => {
-      const getTask = async () => {
-        const tasksFromServer = await fetchTask()
-        setTask(tasksFromServer)
-      }
-  
-      getTask();
+      fetchTask()
     },[])
 
     // FETCH TASK
@@ -58,18 +47,19 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
 
     // El sacar la task funciona falla el cambiar de ruta
     // Luego tengo que pasar el resultado a TaskView
-    console.log(data);
+    console.log("Task de data ",data);
     setTask(data)
 
-    return data
   }
 
-    console.log(task.reminder)
+  console.log("Task reminder ", task.reminder);
+  // console.log("Task que llega a TaskView ",task)
+  //   console.log("Reminder de la Task ",task.reminder)
     //console.log(error)
     // Esta linea la usaba para recoger los parametros de la url
     // const query = new URLSearchParams(useLocation().search)
   return (
-    <div draggable="true" className={`task ${task.reminder ? 'reminder' : ''}`}>
+    <div className={`task ${task.reminder ? 'reminder' : ''}`}>
         <h3>
             {task.name}{' '}
             <FaTimes style={{ color: 'red', cursor: 'pointer' }}
@@ -81,18 +71,6 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
         <p>
           {task.description}
         </p>
-        {/* El botón me abrirá el AddTask "que es donde tengo el formulario" y le pasaré a esta la task */}
-        {/* Necesito otro ternario dentro del onClick "no puedo hacer todo en el mismo boton"
-        Con el primer boton abrimos el form y luego necesitamos dos botones más.
-        - Necesito que se mantenga el botón del header para abrir y cerrar formmulario.
-        - Necesito que el botón del formulario dependiendo de en la ruta en la que este, haga
-        onAdd o onEdit
-        - También necesito que dependiendo de la ruta los input se carguen con un valor u otro.
-        (Si estás / has abierto el formulario desde la ruta de donde solo hay una task, cargará los datos de esa y 
-        los pondrá en los inputs. Luego usará un onChange para ver si ha cambiado algo, set de los valores y con el
-        botón lanzaremos el onEdit)
-        */}
-        <button onClick={() => onEdit(task.id)}>{showAdd ? "Close" : "Edit Task"}</button>
     </div>
   )
 }
