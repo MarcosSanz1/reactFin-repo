@@ -71,6 +71,7 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
         <p>
           {task.description}
         </p>
+        <Link to='/'>Go Back</Link>
     </div>
   )
 }

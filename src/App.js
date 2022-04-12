@@ -9,7 +9,7 @@ import About from "./components/About";
 import NotFound from "./components/NotFound";
 import TaskView from "./components/TaskView";
 import Profile from "./components/Profile";
-//import LoginButton from "./components/LoginButton";
+import LoginButton from "./components/LoginButton";
 import swal from 'sweetalert';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./components/Login";
@@ -209,9 +209,24 @@ const App = () => {
     return taskId
   }
 
+  // Necesito pasar la variable de que ha iniciado sesion. me gustaría tenerla 
+  // en App para decirle al resto de componentes que ha iniciado o no
+  // Quiero "setearla" al iniciar
+
+  // const onLogin = () => {
+  //   if (!login) {
+  //     navigate("/login")
+  //   }
+  //   else {
+  //     setLogin(!login)
+  //   }
+  // }
+
   console.log("Id bueno ",taskId);
   console.log(idTask);
   console.log("Lista de tareas que le paso a Tasks ",tasks);
+  console.log("Sesión iniciada ", login);
+  console.log("setLogin que paso a LoginButton ", setLogin);
 
   // PODEMOS HACERLO CON function
   // Le pasamos al componente Tasks (la lista de tasks y funciones CRUD). También
@@ -232,7 +247,8 @@ const App = () => {
         {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y esta sacará la boolean de si ha conseguido iniciar o no
         el botón de Login no se mostrará en la página de login y cuando entre y cambie de página aparecerá el botón con el texto Log out, que a darle cuando está en Log out cerrará sesión 
         y vuelta a empezar*/}
-        <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button>
+        <LoginButton login={login} setLogin={(value) => console.log(value)}  textLogin={login ? "Log out" : "Login"}/>
+        {/* <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button> */}
         {/* <LoginButton color={ login ? 'red' : 'white'} 
         text={login ? 'Log out' : 'Login'} /> */}
         <Routes>
@@ -245,7 +261,7 @@ const App = () => {
             </>
           } />
           <Route path="/about" element={<About/>} />
-          <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<Login setLogin={setLogin}/>} />
           <Route path="/profile" element={<Profile login={login}/>} />
           <Route path="*" element={<NotFound/>}/>
           {/* Creo que desde aquí necesito pasar a AddTask la task (tengo la id, que me traigo de darle dos clicks en una tarea)*/}

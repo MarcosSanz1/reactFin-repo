@@ -1,8 +1,5 @@
-import { useNavigate } from 'react-router-dom'
 import Task from './TaskItem'
 //import { useState } from 'react'
-
-const navigate = useNavigate
 
 // TASKS IN STATE
 // Queremos que la lista de tareas sea parte de nuestro state, para ello llamamos al hook useState

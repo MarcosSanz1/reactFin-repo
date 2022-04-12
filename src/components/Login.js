@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Form, Button, Row} from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom';
 import "../css/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -8,16 +9,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 // -> MIRAR HACER EL LOGIN CON AUTH0
 
-const Login = ({ onUserLogin }) => {
+const Login = ({ setLogin }) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [users, setUsers] = useState([])
+    // const [userLogin, setUserLogin] = useState(false)
 
-    // useEffect(() => {
-    //     fetchUsers();
-    // },[])
-
+    const navigate = useNavigate();
 
     // Esto me lo haría si no fuera un array, solo un objeto
     // app.post('/login', (req, res) => {
@@ -53,7 +52,39 @@ const Login = ({ onUserLogin }) => {
     //     return data
     //   }
 
-    // ahora tengo que comparar 
+    const fetchUsers = async () => {
+        try {
+            const res = await fetch(`http://localhost:3001/users?email=${email}`)
+            const data = await res.json()
+            console.log("data que llega a Login ",data);
+
+            setUsers(data);
+            // Ya puedo buscar por email y si existe un usuario con ese email me lo saca y si no saca un array vacio
+
+            console.log("Password de data ",data[0].password);
+            console.log("Password de variable", password);
+            // Necesito comprobar que la contraseña coincida con el usuario
+            if (data[0].password !== password){
+                console.log("Contraseña incorrecta")
+            }
+            else {
+                console.log("Has iniciado correctamente")
+                navigate('/')
+                setLogin(true)
+                // login = !this.props.login
+                console.log("Cambio de login: ",setLogin)
+            }
+
+            return data
+        }catch (e) {
+            console.log("Este usuario no existe");
+            return console.log(e)
+        }
+        // Tiene que buscar por email y si no lo encuentra ya hará algo
+
+        // El sacar la task funciona falla el cambiar de ruta
+        // Luego tengo que pasar el resultado a TaskView
+      }
 
     // Puedo intentar hacer que name = 'Usuario1' y si el setName recoge algo diferente
     // no puedo iniciar sesión y al darle a entrar mandará un sweetAlert diciendo que es incorrecto
@@ -62,29 +93,20 @@ const Login = ({ onUserLogin }) => {
     // Creo que necesito que la función onSubmit me compare lo que recoge con lo que tiene
     const onSubmit = (e) => {
         e.preventDefault()
-        // Si el texto del nombre y contraseña no es igual al que recogemos de la llamada sacará un alert por pantalla y no dejará pasar de ventana
-        // Tengo que usar algo que me diga que Usuario1 esta en algún objeto.name (creo que servía findOne)
-        if (email !== "Usuario1" || password !== "123456"){
-            alert('This user does not exist')
-        }
 
-        // Si no, si está todo correctamente añadirá la task con los datos recogidos
-        onUserLogin({ email, password })
-        // Por último volverá a poner los valores iniciales (vacios).
-        // Esto no se si dejarlo y que aunque falle deje el nombre puesto
-        setEmail('')
-        setPassword('')
+        console.log("Hace el onSubmit")
+        fetchUsers()
     }
 
     // En los onChange tendré que recoger el valor y luego comprobarlo con el que esta en la BD
   return (
-    <div className='containerPrincipal'>
+    <div className='containerPrincipal' >
         <div className='containerSecundario'>
             <div className='form-group'>
                 <label>Email: </label>
                 <br />
                 <input 
-                    type="text" required placeholder="Email" 
+                    type="text" required placeholder="email@gmail.com" 
                     onChange={(e) => setEmail(e.target.value)} 
                 />
                 <br />
@@ -95,7 +117,7 @@ const Login = ({ onUserLogin }) => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <br />
-                <button className='btn btn-primary' type="submit">Login</button>
+                <button className='btn btn-primary' type="submit" onClick={onSubmit}>Login</button>
             </div>
         </div>
     </div>

@@ -1,22 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 
-const LoginButton = ({color, text, onClick}) => {
+const LoginButton = ({ login, setLogin, textLogin}) => {
 
+    const [catchLogin, setCatchLogin] = useState(login)
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!login){
+            navigate("/login")
+        }
+    }, [catchLogin])
+
+    const onLoginUser = () => {
+
+        setLogin(false);
+        setCatchLogin(!catchLogin)
+
+        // if (!login) {
+        //     navigate("/")
+        // }
+        // else{
+        //     navigate("/login")
+        // }
+    }
+
+    // Aquí es donde defino la función onClick. Creo que tengo que pasarlo a App
+    // para no tener que pasarle la variable al botón
     return <button 
-    onClick={onClick}
-    style={{background: color, border: "solid"} }
-    className='btn'>{text}</button>
-  }
-  
-  LoginButton.defaulProps = {
-      color: 'steelblue'
+    onClick={() => onLoginUser()}
+    style={{ border: "solid"} }
+    className='btn'>{textLogin}</button>
   }
   
   LoginButton.propTypes = {
-      text: PropTypes.string,
-      color: PropTypes.string,
-      onClick: PropTypes.func
+      textLogin: PropTypes.string
   }
   
   export default LoginButton

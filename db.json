@@ -2,7 +2,7 @@
   "tasks": [
     {
       "id": 1,
-      "name": "Cambio3",
+      "name": "Cambio1",
       "day": "2022-04-07T18:01:57.139Z",
       "reminder": true,
       "description": "Descripción de ejemplo para la primera tarea. Cambio realizado"
@@ -17,7 +17,7 @@
   ],
   "users": [
     {
-      "name": "Usuario1",
+      "email": "m@gmail.com",
       "password": "123456",
       "id": 1
     }
