@@ -106,7 +106,10 @@ const App = () => {
   // }
 
   // Usamos fetch para buscar la task de la API que queremos borrar y method para poner que queremos hacer
+  // -> Voy a hacer que al borrar, estando en una vista detallada me vuelva a la lista de tareas y ahí ya veré que la que he borrado ya no está
   const deleteTask = async (id) => {
+
+    console.log("Id para borrar ", id)
 
     swal({
       title: "Are you sure?",
@@ -126,6 +129,7 @@ const App = () => {
         fetch(`http://localhost:3001/tasks/${id}`, {
         method: 'DELETE'
     })
+    .then (res => window.location.href="/taskTracker")
       }
     });
     setChange(true)
@@ -166,6 +170,8 @@ const App = () => {
     setChange(true)
     console.log(tasks)
   }
+
+  console.log("Estado del cambio al editar o borrar: ",change)
 
   // ADD TASK
   // const addTask = (task) => {
@@ -267,7 +273,7 @@ const App = () => {
           <Route path="/task/:id" element={
             <>
               {showAddTask ? <AddTask onEdit={editTask} nueva={!nueva} /> : null}
-              <TaskView idTask={taskId} onEdit={editTask} onDelete={deleteTask} 
+              <TaskView idTask={taskId} onEdit={editTask} onDelete={(value) => deleteTask(value)} 
               showAdd={showAddTask} login={login} change={change} setChange={setChange}/>
             </>
           } />

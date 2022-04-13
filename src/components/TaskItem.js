@@ -33,7 +33,7 @@ const TaskItem = ({ task, onDelete, login}) => {
              onClick={() => onDelete(task.id)} /> : null}
         </h3>
         <p>
-          {moment(task.day).format('YYYY-MM-DD HH:mm')}
+          {moment(task.day).format('D MMMM YYYY HH:mm')}
         </p>
     </div>
   )

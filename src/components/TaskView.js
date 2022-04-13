@@ -46,14 +46,14 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd, login, change, setChange 
       // Si se ha editado buscará de nuevo (para saber que se ha editado necesitamos pasar una bool del formulario, aquí cuando le damos al botón de guardar. También hay que
       // pasar la bool, cuando borramos la tarea)
       // La boolean va a cambiar cuando pase por onEdit y por onDelete
-      // -> Puedo usar el array que ahí si que se modifica, pero luego como le
       fetchTask()
 
-      // console.log("Estado del cambio ", change)
-      // if(change){
-      //   fetchTask()
-      // }
-    },[])
+      console.log("Estado del cambio ", change)
+      if(change){
+        fetchTask()
+      }
+      setChange(false)
+    },[change])
 
     // FETCH TASK
     // Guardará el contenido de una task que buscará por su id.
@@ -78,10 +78,10 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd, login, change, setChange 
         <h3>
             {task.name}{' '}
             <FaTimes style={{ color: 'red', cursor: 'pointer' }}
-             onClick={() => onDelete(task.id)}/>
+             onClick={() => onDelete(task.id) }/>
         </h3>
         <p>
-          {moment(task.day).format('YYYY-MM-DD HH:mm')}
+          {moment(task.day).format('D MMMM YYYY HH:mm')}
         </p>
         <p>
           {task.description}

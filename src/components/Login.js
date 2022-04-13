@@ -29,6 +29,10 @@ const Login = ({ setLogin }) => {
         try {
             const res = await fetch(`http://localhost:3001/users?email=${email}`)
             const data = await res.json()
+
+            // Devuelve todos los objetos que pasan el filtro
+            // const user = res.filter(user => user.email === email)
+
             console.log("data que llega a Login ",data);
 
             setUsers(data);
