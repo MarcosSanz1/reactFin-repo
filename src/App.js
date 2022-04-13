@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import React from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
@@ -59,6 +59,12 @@ const App = () => {
 
   const nueva = true;
 
+  // Le doy a los botones que cambián y me cambia el valor de la bool. Luego busco y vuelvo a cambiar el valor al que estaba
+
+  const [change, setChange] = useState(false);
+
+  // const location = useLocation();
+
   // Función useEffect para sacar las tasks
   useEffect(() => {
     fetchTasks()
@@ -74,8 +80,6 @@ const App = () => {
 
     console.log(data);
     setTasks(data)
-
-    return data
   }
 
   // FETCH TASK
@@ -89,6 +93,7 @@ const App = () => {
     console.log(data.id);
     setIdTask(data.id)
     //navigate('/task/$:id', {replace: true})
+    return data
   }
 
   // DELETE TASK
@@ -123,6 +128,7 @@ const App = () => {
     })
       }
     });
+    setChange(true)
     console.log(tasks)
   }
 
@@ -153,10 +159,11 @@ const App = () => {
     // const data = await res.json()
 
     setTasks(tasks.map((task) => 
-    // task.id === id ? { ...task} : task))
-    task !== updateTask ? task = updateTask : task))
+    // Aquí estaba comparando las tareas y tenia que comparar por id
+    task.id === updateTask.id ? updateTask : task))
 
     setShowAddTask(false)
+    setChange(true)
     console.log(tasks)
   }
 
@@ -200,15 +207,6 @@ const App = () => {
   //   }    
   // }
 
-  const sendIdTask = (taskId) => {
-    setTaskId({taskId});
-    console.log(taskId);
-
-    // navigate(`/task/${taskId}`);
-
-    return taskId
-  }
-
   // Necesito pasar la variable de que ha iniciado sesion. me gustaría tenerla 
   // en App para decirle al resto de componentes que ha iniciado o no
   // Quiero "setearla" al iniciar
@@ -243,11 +241,12 @@ const App = () => {
       <div className="container">
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask} onEdit={() => setShowAddTask(!showAddTask)}/>
+        showAdd={showAddTask} onEdit={() => setShowAddTask(!showAddTask)}
+        login={login}/>
         {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y esta sacará la boolean de si ha conseguido iniciar o no
         el botón de Login no se mostrará en la página de login y cuando entre y cambie de página aparecerá el botón con el texto Log out, que a darle cuando está en Log out cerrará sesión 
         y vuelta a empezar*/}
-        <LoginButton login={login} setLogin={(value) => console.log(value)}  textLogin={login ? "Log out" : "Login"}/>
+        <LoginButton login={login} setLogin={(value) => setLogin(value)}  textLogin={login ? "Log out" : "Login"}/>
         {/* <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button> */}
         {/* <LoginButton color={ login ? 'red' : 'white'} 
         text={login ? 'Log out' : 'Login'} /> */}
@@ -257,19 +256,19 @@ const App = () => {
             <>
               {showAddTask ? <AddTask onAdd={addTask} nueva={nueva} /> : null}
               {tasks.length > 0 ? (<Tasks tasks={tasks} onDelete={deleteTask} 
-              onAdd={addTask} onViewTask={fetchTask} sendIdTask={sendIdTask}/>) : ('No Tasks To Show')}
+              login={login}/>) : ('No Tasks To Show')}
             </>
           } />
           <Route path="/about" element={<About/>} />
           <Route path="/login" element={<Login setLogin={setLogin}/>} />
-          <Route path="/profile" element={<Profile login={login}/>} />
+          <Route path="/profile" element={<Profile login={login} />} />
           <Route path="*" element={<NotFound/>}/>
           {/* Creo que desde aquí necesito pasar a AddTask la task (tengo la id, que me traigo de darle dos clicks en una tarea)*/}
           <Route path="/task/:id" element={
             <>
               {showAddTask ? <AddTask onEdit={editTask} nueva={!nueva} /> : null}
               <TaskView idTask={taskId} onEdit={editTask} onDelete={deleteTask} 
-              showAdd={showAddTask}/>
+              showAdd={showAddTask} login={login} change={change} setChange={setChange}/>
             </>
           } />
         </Routes>
@@ -384,5 +383,46 @@ const App = () => {
 // Tengo que tener las cosas claras y subdividir lo que quiero hacer en "primero paso esto - segundo recojo lo otro"
 
 // Necesito implementar el login con un usuario y contraseña. Si ese usuario y contraseña no coincide no se puede loguear
+
+// ARREGLAR:
+// NO FUNCIONA EL DOBLE CLICK PARA IR A LA VISTA DETALLADA ERA SOLO EN MOVIL
+// - En el Login
+//  + Hacer que no me salga al principio la página, si no que la saque al darle al botón
+//  + Quitar el botón de login de arriba a la izquierda
+//  + Quitar los links de about y perfil
+//  + // CAMBIAR PARA QUE NO SEA OTRA PÁGINA "Que sea una ventana emergente y 
+//  que este encima de la lista de tareas" MIRAR LO DE ABAJO
+// Swal.fire({
+//   title: 'Login Form',
+//   html: `<input type="text" id="login" class="swal2-input" placeholder="Username">
+//   <input type="password" id="password" class="swal2-input" placeholder="Password">`,
+//   confirmButtonText: 'Sign in',
+//   focusConfirm: false,
+//   preConfirm: () => {
+//     const login = Swal.getPopup().querySelector('#login').value
+//     const password = Swal.getPopup().querySelector('#password').value
+//     if (!login || !password) {
+//       Swal.showValidationMessage(`Please enter login and password`)
+//     }
+//     return { login: login, password: password }
+//   }
+// }).then((result) => {
+//   Swal.fire(`
+//     Login: ${result.value.login}
+//     Password: ${result.value.password}
+//   `.trim())
+// })
+
+
+// - En el Perfil
+//  + Sacar el email por pantalla (Tengo la busqueda de usuarios en el Login)
+//  + Quitar el link del perfil
+//  + Poner algo para cambiar la contraseña
+
+// - A la hora de editar, arreglar que me cargue al instante
+
+// - En el formulario
+//  + Podía meter una task con un espacio en el nombre, "hacer comprobaciones".
+//  "usaba el required pero se come los espacios"
 
 export default App;

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const LoginButton = ({ login, setLogin, textLogin}) => {
 
     const [catchLogin, setCatchLogin] = useState(login)
     const navigate = useNavigate();
 
+    // Si de un inicio el login esta a false entrará en la página de login
+    // Esto lo hará hasta que catchLogin cambie de valor
     useEffect(() => {
         if (!login){
             navigate("/login")
@@ -26,9 +28,9 @@ const LoginButton = ({ login, setLogin, textLogin}) => {
         // }
     }
 
-    // Aquí es donde defino la función onClick. Creo que tengo que pasarlo a App
-    // para no tener que pasarle la variable al botón
     return <button 
+    // hidden={} -> Necesito poner una variable que este a true o false cuando
+    // este en una ruta u otra
     onClick={() => onLoginUser()}
     style={{ border: "solid"} }
     className='btn'>{textLogin}</button>

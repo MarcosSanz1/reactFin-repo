@@ -17,7 +17,9 @@ import Task from './TaskItem'
 // Este formato vendrá por parte de otro componente donde tendremos formato que usa cada item del array.
 // Por ello uno a uno le vamos pasando a TaskItem.js la propia task y la función onDelete
 
-const Tasks = ({ tasks, onDelete, onViewTask, sendIdTask }) => {
+// CREO QUE POR AQUÍ FALLA ALGO CON LA KEY O LA LISTA DE TASKS
+
+const Tasks = ({ tasks, onDelete, login }) => {
   console.log("Lista de tarea que llega a Tasks ", tasks)
   return (
     <div>
@@ -25,7 +27,8 @@ const Tasks = ({ tasks, onDelete, onViewTask, sendIdTask }) => {
         <Task 
          key={task.id}
          task={task} 
-         onDelete={onDelete} onViewTask={onViewTask} sendIdTask={ (value) => sendIdTask(value)}/>
+         onDelete={onDelete}
+         login={login}/>
         ))}
     </div>
   )

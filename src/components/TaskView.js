@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation, useParams, Link } from 'react-router-dom'
+import { useLocation, useParams, Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { useFetch } from '../hooks/useFetch';
 import { FaTimes } from 'react-icons/fa'
@@ -12,7 +12,7 @@ import AddTask from './AddTask';
 // Con esto ya puedo recoger los parametros que quiera
 // Estando ya en la TaskView, desde ahí ya seteamos la task.
 
-const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
+const TaskView = ({ taskId, onDelete, onEdit, showAdd, login, change, setChange }) => {
   // const [task, setTask] = useState(null);
 
   console.log("id TaskView "+taskId);
@@ -21,6 +21,8 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
   const params = useParams();
 
   console.log("Params ruta ",params.id)
+
+  const navigate = useNavigate();
 
   // const { task, error, loading } = useFetch(
   //   "http://localhost:3001/tasks/" + idTask
@@ -36,7 +38,21 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
     // },[])
 
     useEffect(() => {
+      if (!login){
+        navigate("/")
+      }
+
+      // Tengo que decirle que algo ha cambiado y volver a buscar "Puedo usar una boolean". En la lista de tasks si que me carga porque tengo el array en local.
+      // Si se ha editado buscará de nuevo (para saber que se ha editado necesitamos pasar una bool del formulario, aquí cuando le damos al botón de guardar. También hay que
+      // pasar la bool, cuando borramos la tarea)
+      // La boolean va a cambiar cuando pase por onEdit y por onDelete
+      // -> Puedo usar el array que ahí si que se modifica, pero luego como le
       fetchTask()
+
+      // console.log("Estado del cambio ", change)
+      // if(change){
+      //   fetchTask()
+      // }
     },[])
 
     // FETCH TASK
@@ -49,7 +65,6 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
     // Luego tengo que pasar el resultado a TaskView
     console.log("Task de data ",data);
     setTask(data)
-
   }
 
   console.log("Task reminder ", task.reminder);
@@ -71,7 +86,6 @@ const TaskView = ({ taskId, onDelete, onEdit, showAdd }) => {
         <p>
           {task.description}
         </p>
-        <Link to='/'>Go Back</Link>
     </div>
   )
 }

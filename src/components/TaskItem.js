@@ -18,7 +18,7 @@ const history = createBrowserHistory();
 // Con props cojo los "parámetros del padre" <Tasks idTask={idTask} /> Aquí cojería el idTask
 // Tendré que usar props
 
-const TaskItem = ({ task, onDelete, onViewTask, sendIdTask}) => {
+const TaskItem = ({ task, onDelete, login}) => {
 
   const navigate = useNavigate();
   console.log("Task que llega a TaskItem ",task)
@@ -29,8 +29,8 @@ const TaskItem = ({ task, onDelete, onViewTask, sendIdTask}) => {
     <div draggable="true" className={`task ${task.reminder ? 'reminder' : ''}`} onDoubleClick={() => navigate(`/task/${task.id}`)}>
         <h3>
             {task.name}
-            <FaTimes style={{ color: 'red', cursor: 'pointer' }}
-             onClick={() => onDelete(task.id)}/>
+            {login ? <FaTimes style={{ color: 'red', cursor: 'pointer' }}
+             onClick={() => onDelete(task.id)} /> : null}
         </h3>
         <p>
           {moment(task.day).format('YYYY-MM-DD HH:mm')}

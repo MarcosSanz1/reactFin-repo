@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 // Podemos recoger valores y funciones y ponerselos al button
-const AddButton = ({color, text, onClick}) => {
+const AddButton = ({color, text, onClick, login}) => {
 
   return <button 
+  hidden={!login}
   onClick={onClick} 
   style={{background: color}}
   className='btn'>{text}</button>

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 
 // props ahora es el título 
 // Podemos pasarle parametros desde aquí al button y hasta funciones "onClick"
-const Header = ({title , onAdd, showAdd, onEdit }) => {
+const Header = ({title , onAdd, showAdd, onEdit, login }) => {
   // Esto nos permite ver la ruta en la que estamos actualmente
   const location = useLocation()
   return (
@@ -16,6 +16,7 @@ const Header = ({title , onAdd, showAdd, onEdit }) => {
       mostrar o no el botón de add task */}
       {location.pathname === "/" && (
         <AddButton 
+          login={login}
           color={showAdd ? 'red' : 'green'} 
           text={showAdd ? 'Close' : 'Add'} 
           onClick={onAdd} 

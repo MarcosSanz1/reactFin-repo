@@ -18,39 +18,12 @@ const Login = ({ setLogin }) => {
 
     const navigate = useNavigate();
 
-    // Esto me lo haría si no fuera un array, solo un objeto
-    // app.post('/login', (req, res) => {
-    //     let { email, password } = req.body;
-    //     UserRepository.login(email, password)
-    //       .then(logged => {
-    //         if(logged) { // login correcto
-    //           res.session.user = { email };
-    //           res.jsonp({ success: true });
-    //         } else {
-    //           res.jsonp({
-    //             success: false,
-    //             message: 'Email o contraseña incorrecta'
-    //           });
-    //         }
-    //   });
 
     // Con -> window.location.href="./" volvemos a la ruta indicada
     
     // hacer una llamada por nombre 
 
     // Necesito buscar la lista de usuarios:
-    // const fetchUsers = async () => {
-    //     // res -> Es igual a esperar porque buscar devuelve una promise, así que queremos
-    //     // esperar esa promise de la url de la API. Luego esperaremos estos datos y guardaremos en data.
-    //     // y más tarde lo sacaremos por consola. Esto nos guardará los datos de la API en data.
-    //     const res = await fetch(`http://localhost:3001/users/${name}`)
-    //     const data = await res.json()
-    
-    //     console.log(data);
-    //     setUsers(data)
-
-    //     return data
-    //   }
 
     const fetchUsers = async () => {
         try {
@@ -88,7 +61,6 @@ const Login = ({ setLogin }) => {
 
     // Puedo intentar hacer que name = 'Usuario1' y si el setName recoge algo diferente
     // no puedo iniciar sesión y al darle a entrar mandará un sweetAlert diciendo que es incorrecto
-    // Luego hacer que si esta logueado puede entrar en vista detallada, borrar, editar y añadir.
 
     // Creo que necesito que la función onSubmit me compare lo que recoge con lo que tiene
     const onSubmit = (e) => {

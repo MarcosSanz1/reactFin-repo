@@ -12,13 +12,12 @@ const Profile = ({ login }) => {
     // y sin nada cada segundo o con cada tick.
     useEffect(() => {
         if (!login) {
-            navigate("/", {replace: true})
+            navigate("/")
         }
     }, [login]);
   return (
     <div>
       <h4>User Profile</h4>
-      <Link to='/'>Go Back</Link>
     </div>
   )
 }
