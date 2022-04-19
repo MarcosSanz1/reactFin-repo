@@ -8,11 +8,11 @@
       "description": "Descripción de ejemplo para la primera tarea. Cambio realizado x2"
     },
     {
+      "id": 2,
       "name": "Nueva2",
-      "day": "2022-04-13T13:18:07.760Z",
+      "day": "2022-04-28T07:16:28.310Z",
       "reminder": true,
-      "description": "aaaaaa",
-      "id": 2
+      "description": "Nueva descripción. MODIFICADA"
     }
   ],
   "users": [

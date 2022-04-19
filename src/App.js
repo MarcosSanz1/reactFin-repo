@@ -129,7 +129,7 @@ const App = () => {
         fetch(`http://localhost:3001/tasks/${id}`, {
         method: 'DELETE'
     })
-    .then (res => window.location.href="/taskTracker")
+    .then (res => window.location.href="/taskTracker/")
       }
     });
     setChange(true)
@@ -391,7 +391,6 @@ const App = () => {
 // Necesito implementar el login con un usuario y contraseña. Si ese usuario y contraseña no coincide no se puede loguear
 
 // ARREGLAR:
-// NO FUNCIONA EL DOBLE CLICK PARA IR A LA VISTA DETALLADA ERA SOLO EN MOVIL
 // - En el Login
 //  + Hacer que no me salga al principio la página, si no que la saque al darle al botón
 //  + Quitar el botón de login de arriba a la izquierda
@@ -419,16 +418,15 @@ const App = () => {
 //   `.trim())
 // })
 
-
 // - En el Perfil
-//  + Sacar el email por pantalla (Tengo la busqueda de usuarios en el Login)
+//  + Sacar el email por pantalla (Tengo la busqueda de usuarios en el Login) -> Esto con Local Storage
 //  + Quitar el link del perfil
-//  + Poner algo para cambiar la contraseña
-
-// - A la hora de editar, arreglar que me cargue al instante
 
 // - En el formulario
 //  + Podía meter una task con un espacio en el nombre, "hacer comprobaciones".
 //  "usaba el required pero se come los espacios"
+
+// Puedo poner el boton de Login en el Header
+// Al footer necesito pasarle una bool para que cuando este en 
 
 export default App;
