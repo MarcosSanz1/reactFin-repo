@@ -394,7 +394,6 @@ const App = () => {
 // - En el Login
 //  + Hacer que no me salga al principio la página, si no que la saque al darle al botón
 //  + Quitar el botón de login de arriba a la izquierda
-//  + Quitar los links de about y perfil
 //  + // CAMBIAR PARA QUE NO SEA OTRA PÁGINA "Que sea una ventana emergente y 
 //  que este encima de la lista de tareas" MIRAR LO DE ABAJO
 // Swal.fire({
@@ -418,15 +417,10 @@ const App = () => {
 //   `.trim())
 // })
 
-// - En el Perfil
-//  + Sacar el email por pantalla (Tengo la busqueda de usuarios en el Login) -> Esto con Local Storage
-//  + Quitar el link del perfil
-
 // - En el formulario
 //  + Podía meter una task con un espacio en el nombre, "hacer comprobaciones".
 //  "usaba el required pero se come los espacios"
 
 // Puedo poner el boton de Login en el Header
-// Al footer necesito pasarle una bool para que cuando este en 
 
 export default App;

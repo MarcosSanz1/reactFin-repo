@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate} from 'react-router-dom'
 
 // Creo que necesito pasar la función a App.js
 // La función tiene que recoger la variable login
 const Profile = ({ login }) => {
     const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
 
     // Al usar este Hook, le estamos indicando a React que el componente tiene que hacer algo después de renderizarse
     // En useEffect
@@ -14,10 +16,16 @@ const Profile = ({ login }) => {
         if (!login) {
             navigate("/")
         }
-    }, [login]);
+        setEmail(getData())
+    }, []);
+
+    const getData = () => {
+      return localStorage.getItem('email')
+    }
+
   return (
     <div>
-      <h4>User Profile</h4>
+      <h4>{ email }</h4>
     </div>
   )
 }

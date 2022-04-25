@@ -71,6 +71,7 @@ const Login = ({ setLogin }) => {
         e.preventDefault()
 
         console.log("Hace el onSubmit")
+        localStorage.setItem('email', email);
         fetchUsers()
     }
 
