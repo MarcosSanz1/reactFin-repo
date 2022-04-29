@@ -248,14 +248,7 @@ const App = () => {
         {/* setShowAddTask queremos establecerlo en el opuesto de cualquier valor */}
         <Header onAdd={() => setShowAddTask(!showAddTask)}
         showAdd={showAddTask} onEdit={() => setShowAddTask(!showAddTask)}
-        login={login}/>
-        {/* Ahora el botón no cambiará el nombre si no que pasará a la página de Login, y esta sacará la boolean de si ha conseguido iniciar o no
-        el botón de Login no se mostrará en la página de login y cuando entre y cambie de página aparecerá el botón con el texto Log out, que a darle cuando está en Log out cerrará sesión 
-        y vuelta a empezar*/}
-        <LoginButton login={login} setLogin={(value) => setLogin(value)}  textLogin={login ? "Log out" : "Login"}/>
-        {/* <button className="p-2" onClick={() => setLogin(!login)}>{login ? "Log out" : "Login"}</button> */}
-        {/* <LoginButton color={ login ? 'red' : 'white'} 
-        text={login ? 'Log out' : 'Login'} /> */}
+        login={login} setLogin={setLogin}/>
         <Routes>
           <Route path="/"
           element={

@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Form, Button, Row} from 'react-bootstrap'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import "../css/Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -70,7 +69,6 @@ const Login = ({ setLogin }) => {
     const onSubmit = (e) => {
         e.preventDefault()
 
-        console.log("Hace el onSubmit")
         localStorage.setItem('email', email);
         fetchUsers()
     }
@@ -83,7 +81,7 @@ const Login = ({ setLogin }) => {
                 <label>Email: </label>
                 <br />
                 <input 
-                    type="text" required placeholder="email@gmail.com" 
+                    type="text" required placeholder="email@gmail.com"
                     onChange={(e) => setEmail(e.target.value)} 
                 />
                 <br />
