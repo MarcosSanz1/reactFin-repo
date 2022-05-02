@@ -262,7 +262,6 @@ const App = () => {
           <Route path="/login" element={<Login setLogin={setLogin}/>} />
           <Route path="/profile" element={<Profile login={login} />} />
           <Route path="*" element={<NotFound/>}/>
-          {/* Creo que desde aquí necesito pasar a AddTask la task (tengo la id, que me traigo de darle dos clicks en una tarea)*/}
           <Route path="/task/:id" element={
             <>
               {showAddTask ? <AddTask onEdit={editTask} nueva={!nueva} /> : null}
